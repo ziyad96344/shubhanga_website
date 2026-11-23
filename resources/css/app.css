@@ -648,49 +648,6 @@ html.js:not(.is-return) .preloader { display: grid; }
 .finder .row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .finder .btn { width: 100%; margin-top: 6px; }
 
-/* Class strip along the bottom of the hero */
-.class-strip {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    margin-top: clamp(56px, 7vw, 96px);
-    padding-block: 24px clamp(36px, 3vw, 48px);
-    border-top: 1px solid rgba(255, 255, 255, .16);
-}
-.class-strip-label {
-    flex-shrink: 0;
-    font-size: .66rem;
-    font-weight: 600;
-    letter-spacing: .24em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, .6);
-}
-.class-strip ul {
-    display: flex;
-    gap: 8px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-}
-.class-strip ul::-webkit-scrollbar { display: none; }
-.class-strip a {
-    display: grid;
-    place-items: center;
-    min-width: 46px;
-    height: 40px;
-    padding: 0 12px;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, .26);
-    font-size: .82rem;
-    font-weight: 500;
-    white-space: nowrap;
-    transition: background-color .4s, color .4s, border-color .4s;
-}
-.class-strip a:hover { background: #fff; color: var(--color-brand); border-color: #fff; }
-@media (max-width: 599px) { .class-strip-label { display: none; } }
 
 /* ------------------------------------------------------------------
    Book cover (image, with a soft spine highlight)
@@ -2000,3 +1957,30 @@ textarea.field-input { resize: vertical; min-height: 96px; }
     color: var(--color-brand);
     opacity: .05;
 }
+
+/* Hero ends with the text and finder now that the class strip is gone */
+.hero { padding-bottom: clamp(56px, 8vw, 110px); }
+
+/* Mobile menu: clean sans links instead of large serif capitals */
+.mobile-menu nav a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-body);
+    font-size: 1.15rem;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: 0;
+    text-transform: none;
+    padding: 16px 0;
+}
+.mobile-menu nav a::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-top: 1.5px solid var(--ink-mute);
+    border-right: 1.5px solid var(--ink-mute);
+    transform: rotate(45deg);
+}
+.mobile-menu nav a:active { color: var(--color-brand); }
+.mobile-menu .classes a { font-family: var(--font-body); font-weight: 500; }

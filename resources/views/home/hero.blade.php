@@ -52,12 +52,4 @@
         </div>
     </div>
 
-    <nav class="wrap class-strip" aria-label="Books by class">
-        <span class="class-strip-label">Browse by class</span>
-        <ul>
-            @foreach ($catalog['classes'] as $class)
-                <li><a href="{{ route('books.index', ['class' => $class]) }}" data-class-pill>{{ $class }}</a></li>
-            @endforeach
-        </ul>
-    </nav>
 </section>

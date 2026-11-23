@@ -54,7 +54,7 @@ export function initAnimations(ready = Promise.resolve()) {
 }
 
 /* Hero: the one orchestrated load sequence. The photo settles from a slow
-   zoom, headline lines rise out of a mask, then the finder and class strip. */
+   zoom, headline lines rise out of a mask, then the text and finder. */
 function heroIntro(ready) {
     const title = $('[data-hero-title]');
     if (!title) return;
@@ -67,9 +67,7 @@ function heroIntro(ready) {
     ready.then(() => tl.play());
     tl.from(bg, { scale: 1.18, duration: 2.4, ease: 'power2.out' }, 0)
         .from(split.lines, { yPercent: 110, duration: 1.1, stagger: 0.12 }, 0.2)
-        .from('[data-hero-fade]', { y: 40, opacity: 0, duration: 0.9, stagger: 0.12 }, 0.5)
-        .from('.class-strip', { opacity: 0, duration: 0.6 }, 0.8)
-        .from('[data-class-pill]', { y: 16, opacity: 0, duration: 0.5, stagger: 0.03, ease: 'power3.out' }, 0.85);
+        .from('[data-hero-fade]', { y: 40, opacity: 0, duration: 0.9, stagger: 0.12 }, 0.5);
 
     // Photo drifts slower than the page as the hero scrolls away.
     gsap.to(bg, {
