@@ -1,0 +1,10 @@
+Images on the site.
+
+brand/, books/, site/about-*.webp, site/gallery-*.webp, site/for-schools.webp, site/partner.webp
+  Shubhanga Publications' own logo, book covers and photos, taken from
+  https://shubhanga.co.in. Covers are cropped to the front cover and saved as WebP.
+
+site/hero-library.webp
+  "Library stacks of books and bookshelf" by Shixart1985, Wikimedia Commons, CC BY 2.0.
+  Placeholder: credit the photographer if it stays on the live site, or replace it
+  with a Shubhanga photo.
