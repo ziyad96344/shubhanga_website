@@ -1984,3 +1984,19 @@ textarea.field-input { resize: vertical; min-height: 96px; }
 }
 .mobile-menu nav a:active { color: var(--color-brand); }
 .mobile-menu .classes a { font-family: var(--font-body); font-weight: 500; }
+
+/* Phones: big serif headings get room to breathe instead of stacking
+   into a narrow, tightly packed column. */
+@media (max-width: 599px) {
+    .section-head h2,
+    .journey-intro h2,
+    .inside-copy h2,
+    .page-title {
+        max-width: none;
+        font-size: clamp(2.1rem, 9vw, 2.6rem);
+        line-height: 1.04;
+    }
+    .inside-copy h2 em,
+    .section-head h2 em,
+    .journey-intro h2 em { display: inline; }
+}
