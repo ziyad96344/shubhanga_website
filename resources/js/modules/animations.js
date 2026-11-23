@@ -168,17 +168,6 @@ function journey(desktop) {
                 scrub: 1,
             },
         });
-        gsap.from($('.stage-big', stage), {
-            xPercent: 40,
-            ease: 'none',
-            scrollTrigger: {
-                trigger: stage,
-                containerAnimation: scroller,
-                start: 'left right',
-                end: 'right left',
-                scrub: true,
-            },
-        });
     });
 }
 
@@ -251,7 +240,7 @@ function footerWord() {
     const word = $('[data-footer-word]');
     if (!word) return;
     gsap.from(word, {
-        yPercent: 70,
+        yPercent: 35,
         ease: 'none',
         // Trigger on the footer: the word itself overflows the footer edge,
         // so its own bottom never reaches the viewport bottom.

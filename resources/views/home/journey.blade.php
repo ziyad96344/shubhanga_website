@@ -1,6 +1,6 @@
 @php
-    $books = \App\Support\Catalog::books();
-    $stageNumbers = ['N', '1', '6', '9'];
+    $books = \App\Support\Catalog::books()->keyBy('slug');
+    $stages = config('catalog.stages');
 @endphp
 
 <section class="journey" aria-labelledby="journey-title" data-journey>
@@ -11,24 +11,34 @@
             <p>Each stage has its own series, written for how children learn at that age. Scroll to walk through them.</p>
         </div>
 
-        @foreach (config('catalog.stages') as $i => $stage)
+        @foreach ($stages as $i => $stage)
+            @php($count = $books->whereIn('class', $stage['grades'])->count())
             <article class="stage">
-                <div>
-                    <div class="stage-step">Stage {{ $i + 1 }} of {{ count(config('catalog.stages')) }}</div>
+                <div class="stage-copy">
+                    <div class="stage-top">
+                        <span class="stage-step">Stage {{ $i + 1 }} of {{ count($stages) }}</span>
+                        <span class="stage-count">{{ $count }} titles</span>
+                    </div>
                     <h3>{{ $stage['name'] }}</h3>
                     <div class="stage-classes">{{ $stage['classes'] }}</div>
-                    <p style="margin-top: 20px">{{ $stage['text'] }}</p>
-                    <a href="{{ route('books.index', ['class' => ['Nursery', '1', '6', '9'][$i] ?? null]) }}" class="link-arrow" style="margin-top: 28px">Browse {{ strtolower($stage['name']) }} books
+                    <p>{{ $stage['text'] }}</p>
+                    <ul class="stage-tags" aria-label="Includes">
+                        @foreach ($stage['tags'] as $tag)
+                            <li>{{ $tag }}</li>
+                        @endforeach
+                    </ul>
+                    <a href="{{ route('books.index', ['class' => $stage['grades'][0]]) }}" class="link-arrow">Browse {{ strtolower($stage['name']) }} books
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                     </a>
                 </div>
                 <div class="stage-books" aria-hidden="true">
-                    @foreach ($stage['books'] as $series)
-                        @php($book = $books->firstWhere('series', $series) ?? $books->first())
-                        <x-book-cover :book="$book" />
+                    @foreach ($stage['covers'] as $slug)
+                        @if ($book = $books->get($slug))
+                            <x-book-cover :book="$book" :eager="true" />
+                        @endif
                     @endforeach
                 </div>
-                <span class="stage-big" aria-hidden="true">{{ $stageNumbers[$i] }}</span>
+                <span class="stage-big" aria-hidden="true">{{ $stage['name'] }}</span>
             </article>
         @endforeach
     </div>

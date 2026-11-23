@@ -25,30 +25,40 @@ return [
 
     'book_types' => ['Pre-primary', 'Textbooks', 'Skill books', 'Practice books'],
 
+    // `grades` drive the title count and the browse link; `covers` are the
+    // three books fanned on the card; `tags` list what the stage includes.
     'stages' => [
         [
             'name' => 'Pre-primary',
             'classes' => 'Nursery, PP1, PP2',
-            'text' => 'Rhymes, stories, phonics, numeracy, STEM and art: thirteen playful series that build school readiness.',
-            'books' => ['Rhymewing', 'Mathspire', 'Soundnest'],
+            'grades' => ['Nursery', 'PP1', 'PP2'],
+            'text' => 'Playful, activity-based series that build school readiness through rhymes, stories, phonics and numbers.',
+            'tags' => ['Rhymewing', 'FableNest', 'Mathspire', 'Soundnest', 'Tinkerhive', 'Word Crest', 'Art Aura'],
+            'covers' => ['rhymewing-rhymes-nursery', 'mathspire-numeracy-nursery', 'soundnest-phonics-reader-pp1'],
         ],
         [
             'name' => 'Primary',
             'classes' => 'Grade 1 to 5',
-            'text' => 'Semester-wise Mathematics, English, EVS and Social Studies, with Grammar, languages, GK, Abacus and Vedic Maths.',
-            'books' => ['Code Quest', 'Write Right', 'Scribble to Scripts'],
+            'grades' => ['1', '2', '3', '4', '5'],
+            'text' => 'Semester-wise core subjects with skill books that make practice part of every week.',
+            'tags' => ['Mathematics', 'English', 'EVS', 'Grammar', 'Code Quest', 'Abacus', 'Vedic Maths', 'Write Right'],
+            'covers' => ['mathematics-semester-1-class-4', 'code-quest-computer-class-3', 'write-right-calligraphy-class-2'],
         ],
         [
             'name' => 'Middle school',
             'classes' => 'Grade 6 to 8',
+            'grades' => ['6', '7', '8'],
             'text' => 'State syllabus textbooks for Andhra Pradesh and Telangana, and CBSE Smart Scores practice books.',
-            'books' => ['Smart Scores', 'Shubhanga', 'Shubhanga'],
+            'tags' => ['Andhra Pradesh', 'Telangana', 'CBSE Smart Scores', 'English', 'Maths', 'Science', 'Social', 'Hindi', 'Telugu'],
+            'covers' => ['mathematics-semester-1-class-6-ap', 'smart-scores-science-class-7-cbse', 'english-semester-1-class-8-ts'],
         ],
         [
             'name' => 'High school',
             'classes' => 'Grade 9 and 10',
+            'grades' => ['9', '10'],
             'text' => 'Board-focused textbooks and Smart Scores practice with mind maps, worksheets and board-based assessments.',
-            'books' => ['Smart Scores', 'Shubhanga', 'Smart Scores'],
+            'tags' => ['Smart Scores', 'Board exam ready', 'Mind maps', 'History', 'Geography', 'Economics', 'Political Science'],
+            'covers' => ['smart-scores-mathematics-part-1-class-10-cbse', 'smart-scores-science-part-1-class-10-cbse', 'history-class-9-ap'],
         ],
     ],
 

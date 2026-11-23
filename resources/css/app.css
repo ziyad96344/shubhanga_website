@@ -1965,3 +1965,38 @@ textarea.field-input { resize: vertical; min-height: 96px; }
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
 }
+
+/* Journey cards: fuller layout, content centred instead of pinned to the bottom */
+.stage-copy { display: grid; gap: 16px; justify-items: start; }
+.stage-top { display: flex; align-items: center; gap: 14px; }
+.stage-count { padding: 4px 12px; border-radius: 999px; background: var(--color-cream); font-size: .74rem; font-weight: 600; color: var(--color-brand); }
+.stage h3 { margin-top: 0; }
+.stage-classes { margin-top: -6px; }
+.stage-tags { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 4px 0 6px; padding: 0; max-width: 46ch; }
+.stage-tags li { padding: 5px 12px; border: 1px solid var(--line); border-radius: 999px; font-size: .78rem; color: var(--ink-soft); }
+.stage-books { justify-content: center; }
+.stage-books .cover { width: clamp(110px, 13vw, 190px); }
+.stage-books .cover + .cover { margin-left: -46px; }
+@media (min-width: 1000px) {
+    .stage { height: auto; min-height: min(66vh, 560px); align-items: center; padding: clamp(36px, 4vw, 60px); }
+}
+
+/* Footer wordmark: keep the whole word visible */
+.footer-word { line-height: .9; margin-bottom: 0; padding-bottom: clamp(12px, 2vw, 28px); font-size: 14.5vw; }
+
+/* Stage watermark: the full stage name, very faint, sized to fit the card */
+.stage { container-type: inline-size; }
+.stage-copy, .stage-books { position: relative; z-index: 1; }
+.stage-big {
+    right: 4cqi;
+    bottom: 2cqi;
+    left: auto;
+    z-index: 0;
+    font-size: 12cqi;
+    line-height: .8;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--color-brand);
+    opacity: .05;
+}
