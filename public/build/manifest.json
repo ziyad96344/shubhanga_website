@@ -1,0 +1,101 @@
+{
+  "_fonts-BwDNtjBj.css": {
+    "file": "assets/fonts-BwDNtjBj.css",
+    "src": "_fonts-BwDNtjBj.css"
+  },
+  "_instrument-serif-400-italic-DKMiL14s.woff2": {
+    "file": "assets/instrument-serif-400-italic-DKMiL14s.woff2",
+    "src": "_instrument-serif-400-italic-DKMiL14s.woff2"
+  },
+  "_instrument-serif-400-italic-u__WvvIK.woff": {
+    "file": "assets/instrument-serif-400-italic-u__WvvIK.woff",
+    "src": "_instrument-serif-400-italic-u__WvvIK.woff"
+  },
+  "_instrument-serif-400-normal-BVbkICAY.woff": {
+    "file": "assets/instrument-serif-400-normal-BVbkICAY.woff",
+    "src": "_instrument-serif-400-normal-BVbkICAY.woff"
+  },
+  "_instrument-serif-400-normal-DnYpCC2O.woff2": {
+    "file": "assets/instrument-serif-400-normal-DnYpCC2O.woff2",
+    "src": "_instrument-serif-400-normal-DnYpCC2O.woff2"
+  },
+  "_kalam-400-normal-Bl-H2BUA.woff": {
+    "file": "assets/kalam-400-normal-Bl-H2BUA.woff",
+    "src": "_kalam-400-normal-Bl-H2BUA.woff"
+  },
+  "_kalam-400-normal-BthBl_aR.woff2": {
+    "file": "assets/kalam-400-normal-BthBl_aR.woff2",
+    "src": "_kalam-400-normal-BthBl_aR.woff2"
+  },
+  "_kalam-700-normal-7TSuSrjP.woff": {
+    "file": "assets/kalam-700-normal-7TSuSrjP.woff",
+    "src": "_kalam-700-normal-7TSuSrjP.woff"
+  },
+  "_kalam-700-normal-D2H-9ISU.woff2": {
+    "file": "assets/kalam-700-normal-D2H-9ISU.woff2",
+    "src": "_kalam-700-normal-D2H-9ISU.woff2"
+  },
+  "_outfit-300-normal-AWLfuCom.woff": {
+    "file": "assets/outfit-300-normal-AWLfuCom.woff",
+    "src": "_outfit-300-normal-AWLfuCom.woff"
+  },
+  "_outfit-300-normal-CRYTwY6m.woff2": {
+    "file": "assets/outfit-300-normal-CRYTwY6m.woff2",
+    "src": "_outfit-300-normal-CRYTwY6m.woff2"
+  },
+  "_outfit-400-normal-BGsTXAXT.woff2": {
+    "file": "assets/outfit-400-normal-BGsTXAXT.woff2",
+    "src": "_outfit-400-normal-BGsTXAXT.woff2"
+  },
+  "_outfit-400-normal-DMwTpYkH.woff": {
+    "file": "assets/outfit-400-normal-DMwTpYkH.woff",
+    "src": "_outfit-400-normal-DMwTpYkH.woff"
+  },
+  "_outfit-500-normal-ClnHRwRh.woff": {
+    "file": "assets/outfit-500-normal-ClnHRwRh.woff",
+    "src": "_outfit-500-normal-ClnHRwRh.woff"
+  },
+  "_outfit-500-normal-DKnIMDSk.woff2": {
+    "file": "assets/outfit-500-normal-DKnIMDSk.woff2",
+    "src": "_outfit-500-normal-DKnIMDSk.woff2"
+  },
+  "_outfit-600-normal-B7SfZ07L.woff2": {
+    "file": "assets/outfit-600-normal-B7SfZ07L.woff2",
+    "src": "_outfit-600-normal-B7SfZ07L.woff2"
+  },
+  "_outfit-600-normal-BEfTtDA7.woff": {
+    "file": "assets/outfit-600-normal-BEfTtDA7.woff",
+    "src": "_outfit-600-normal-BEfTtDA7.woff"
+  },
+  "_outfit-700-normal-Cu9v6i1X.woff2": {
+    "file": "assets/outfit-700-normal-Cu9v6i1X.woff2",
+    "src": "_outfit-700-normal-Cu9v6i1X.woff2"
+  },
+  "_outfit-700-normal-D4itBLBr.woff": {
+    "file": "assets/outfit-700-normal-D4itBLBr.woff",
+    "src": "_outfit-700-normal-D4itBLBr.woff"
+  },
+  "_pinyon-script-400-normal-3W0BoeAr.woff": {
+    "file": "assets/pinyon-script-400-normal-3W0BoeAr.woff",
+    "src": "_pinyon-script-400-normal-3W0BoeAr.woff"
+  },
+  "_pinyon-script-400-normal-HCoaxbyT.woff2": {
+    "file": "assets/pinyon-script-400-normal-HCoaxbyT.woff2",
+    "src": "_pinyon-script-400-normal-HCoaxbyT.woff2"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-CcmXgI20.css",
+    "name": "app",
+    "names": [
+      "app.css"
+    ],
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-C7VBWZEb.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  }
+}
