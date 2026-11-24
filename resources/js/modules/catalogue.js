@@ -15,7 +15,7 @@ export function initCatalogue(lenis) {
         const submit = () => {
             // Drop empty params ("All") so URLs stay clean.
             [...form.elements].forEach((el) => {
-                if (el.name && (!el.value || (el.name === 'sort' && el.value === 'popular'))) el.disabled = true;
+                if (el.name && (!el.value || (el.name === 'sort' && el.value === 'catalogue'))) el.disabled = true;
             });
             form.submit();
         };

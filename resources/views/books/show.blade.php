@@ -65,7 +65,7 @@
                     <div class="book-chips">
                         <span class="chip">{{ $book['class_label'] }}</span>
                         <span class="chip">{{ $book['board_label'] }}</span>
-                        <span class="chip">{{ $book['type'] }}</span>
+                        <span class="chip">{{ $book['section_label'] }}</span>
                     </div>
 
                     <div class="rating">
@@ -148,7 +148,7 @@
                 <div class="tab-panel detail-panel" role="tabpanel" id="dpanel-0" aria-labelledby="dtab-0">
                     <p>{{ $book['description'] }}</p>
                     <ul class="checklist">
-                        <li>Mapped to the {{ $book['board'] === 'All boards' ? 'syllabus your school follows' : $book['board'].' syllabus' }}</li>
+                        <li>Mapped to the {{ count($book['boards']) >= 6 ? 'syllabus your school follows' : $book['board_label'].' syllabus' }}</li>
                         <li>Clear language, one idea per page, with worked examples</li>
                         <li>Answer key and teacher manual free with school orders</li>
                     </ul>
@@ -173,7 +173,8 @@
 
             <dl class="spec-table">
                 <div><dt>Grade</dt><dd>{{ $book['class_label'] }}</dd></div>
-                <div><dt>Syllabus</dt><dd>{{ $book['board_label'] }}</dd></div>
+                <div><dt>Board</dt><dd>{{ implode(', ', $book['boards']) }}</dd></div>
+                <div><dt>Section</dt><dd>{{ $book['section_label'] }}</dd></div>
                 <div><dt>Subject</dt><dd>{{ $book['subject'] }}</dd></div>
                 <div><dt>Book type</dt><dd>{{ $book['type'] }}</dd></div>
                 <div><dt>Language</dt><dd>{{ $book['language'] }}</dd></div>

@@ -40,7 +40,7 @@ return [
         ['q' => 'How do students use Shubhanga books effectively?', 'a' => 'Encourage your child to follow the worksheets, solve practice questions after each chapter, and use the mind maps before exams.'],
         ['q' => 'Are these books only for schools?', 'a' => 'While many schools officially adopt our books, parents can also request copies through schools or local dealers.'],
         ['q' => 'Do Shubhanga books help in competitive exams?', 'a' => 'Yes. Our higher classes include HOTS (Higher Order Thinking Skills) and Olympiad-based questions for advanced practice.'],
-        ['q' => 'Which syllabuses do you cover?', 'a' => 'CBSE, Karnataka, Andhra Pradesh and Telangana, from Nursery to Grade 10.'],
+        ['q' => 'Which syllabuses do you cover?', 'a' => 'CBSE and the state boards of Karnataka, Andhra Pradesh, Telangana, Tamil Nadu, Kerala, Maharashtra, Odisha, West Bengal, Madhya Pradesh and Chhattisgarh, from Nursery to Grade 10.'],
         ['q' => 'Do you train teachers?', 'a' => 'Yes. We run orientation programs and teacher training workshops for partner schools, covering lesson design, classroom strategies and blended print and digital delivery.'],
         ['q' => 'How do teachers get a specimen copy?', 'a' => 'Fill in the specimen copy form with your school, board and grade, and our team will get in touch.'],
     ],

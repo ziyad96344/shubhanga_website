@@ -15,7 +15,7 @@
                 <span class="line"><em>to the board exam.</em></span>
             </h1>
             <p class="hero-lede" data-hero-fade>
-                Textbooks, skill books and practice books from Nursery to Grade 10 for CBSE, Karnataka, Andhra Pradesh and Telangana schools.
+                Textbooks, skill books and practice books from Nursery to Grade 10 for CBSE and state board schools across eleven states.
             </p>
             <div class="hero-ctas" data-hero-fade>
                 <a href="{{ route('books.index') }}" class="btn btn--gold">Browse books
@@ -40,7 +40,7 @@
                     <label>Grade
                         <select class="select" name="class">
                             @foreach ($catalog['classes'] as $class)
-                                <option value="{{ $class }}" @selected($class === '5')>{{ \App\Support\Catalog::classLabel($class) }}</option>
+                                <option value="{{ $class }}" @selected($class === '6')>{{ \App\Support\Catalog::classLabel($class) }}</option>
                             @endforeach
                         </select>
                     </label>

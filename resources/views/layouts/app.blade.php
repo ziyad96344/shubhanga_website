@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @php
         $pageTitle = $title ?? config('site.full_name').': '.config('site.tagline');
-        $pageDescription = $description ?? 'NEP 2020 aligned textbooks, skill books and practice books from Nursery to Grade 10 for CBSE, Karnataka, Andhra Pradesh and Telangana schools.';
+        $pageDescription = $description ?? 'NEP 2020 aligned textbooks, skill books and practice books from Nursery to Grade 10 for CBSE and state board schools across eleven states.';
         $pageImage = $image ?? config('site.hero_image');
         $pageImage = Str::startsWith($pageImage, 'http') ? $pageImage : url($pageImage);
         $noindex = $noindex ?? false;

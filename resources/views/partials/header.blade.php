@@ -8,14 +8,14 @@
 
         <nav class="main-nav" aria-label="Main">
             <ul>
-                <li><a href="{{ route('books.index', ['type' => 'Pre-primary']) }}">Pre-primary</a></li>
+                <li><a href="{{ route('books.index', ['section' => 'Pre-primary']) }}">Pre-primary</a></li>
                 <li>
                     <button type="button" aria-expanded="false" aria-controls="mega-school" data-mega-toggle>
                         School books
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
                     </button>
                 </li>
-                <li><a href="{{ route('books.index', ['type' => 'Practice books']) }}">Smart Scores</a></li>
+                <li><a href="{{ route('books.index', ['section' => 'CBSE High School']) }}">Smart Scores</a></li>
                 <li><a href="{{ route('resources') }}">Free resources</a></li>
                 <li><a href="{{ route('forms.show', 'specimen-copy') }}">For teachers</a></li>
                 <li><a href="{{ route('blog.index') }}">Blog</a></li>
@@ -54,18 +54,7 @@
     </div>
 
     @php
-        $syllabusNotes = [
-            'CBSE' => 'Smart Scores, Grades 6–10',
-            'Karnataka' => 'Pre-primary and primary',
-            'Andhra Pradesh' => 'State textbooks, Grades 6–10',
-            'Telangana' => 'State textbooks, Grades 6–10',
-        ];
-        $typeNotes = [
-            'Pre-primary' => 'Nursery, PP1, PP2',
-            'Textbooks' => 'Semester-wise core subjects',
-            'Skill books' => 'Abacus, Vedic Maths, GK, Art',
-            'Practice books' => 'CBSE Smart Scores',
-        ];
+        $bookCount = count($catalog['books']);
         $gradeGroups = [
             'Pre-primary' => ['Nursery', 'PP1', 'PP2'],
             'Primary' => ['1', '2', '3', '4', '5'],
@@ -75,15 +64,10 @@
     <div class="mega" id="mega-school" data-mega>
         <div class="wrap mega-grid">
             <div class="mega-item">
-                <h3>By syllabus</h3>
-                <ul class="mega-list">
+                <h3>By board</h3>
+                <ul class="mega-boards">
                     @foreach ($catalog['boards'] as $board)
-                        <li>
-                            <a href="{{ route('books.index', ['board' => $board]) }}">
-                                <span>{{ $board }}</span>
-                                <small>{{ $syllabusNotes[$board] ?? '' }}</small>
-                            </a>
-                        </li>
+                        <li><a href="{{ route('books.index', ['board' => $board]) }}">{{ $board }}</a></li>
                     @endforeach
                 </ul>
             </div>
@@ -103,24 +87,24 @@
                 </div>
             </div>
             <div class="mega-item">
-                <h3>By book type</h3>
+                <h3>By section</h3>
                 <ul class="mega-list">
-                    @foreach ($catalog['book_types'] as $type)
+                    @foreach ($catalog['sections'] as $section => $info)
                         <li>
-                            <a href="{{ route('books.index', ['type' => $type]) }}">
-                                <span>{{ $type }}</span>
-                                <small>{{ $typeNotes[$type] ?? '' }}</small>
+                            <a href="{{ route('books.index', ['section' => $section]) }}">
+                                <span>{{ $info['label'] }}</span>
+                                <small>{{ $info['note'] }}</small>
                             </a>
                         </li>
                     @endforeach
                 </ul>
             </div>
             <div class="mega-item mega-side">
-                <a href="{{ route('books.index', ['type' => 'Practice books']) }}" class="mega-feature">
+                <a href="{{ route('books.index', ['section' => 'CBSE High School']) }}" class="mega-feature">
                     <x-book-cover :book="\App\Support\Catalog::books()->firstWhere('series', 'Smart Scores')" />
                     <p><strong>Smart Scores</strong>CBSE practice books, Grades 6 to 10.</p>
                 </a>
-                <a href="{{ route('books.index') }}" class="link-arrow mega-all">All 560+ books
+                <a href="{{ route('books.index') }}" class="link-arrow mega-all">All {{ $bookCount }} books
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </a>
             </div>
@@ -136,9 +120,9 @@
         </button>
     </div>
     <nav aria-label="Mobile">
-        <a href="{{ route('books.index', ['type' => 'Pre-primary']) }}">Pre-primary</a>
+        <a href="{{ route('books.index', ['section' => 'Pre-primary']) }}">Pre-primary</a>
         <a href="{{ route('books.index') }}">School books</a>
-        <a href="{{ route('books.index', ['type' => 'Practice books']) }}">Smart Scores</a>
+        <a href="{{ route('books.index', ['section' => 'CBSE High School']) }}">Smart Scores</a>
         <a href="{{ route('resources') }}">Free resources</a>
         <a href="{{ route('forms.show', 'specimen-copy') }}">For teachers</a>
         <a href="{{ route('blog.index') }}">Blog</a>

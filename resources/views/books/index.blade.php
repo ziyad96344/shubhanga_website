@@ -1,15 +1,22 @@
 @extends('layouts.app', [
     'title' => 'School books, Nursery to Grade 10 | '.config('site.full_name'),
-    'description' => 'Browse Shubhanga pre-primary series, textbooks, skill books and CBSE Smart Scores by syllabus, grade, subject and book type.',
+    'description' => 'Browse every Shubhanga book by state board, section, grade and subject: pre-primary, primary, State Board and CBSE high school.',
     'noindex' => request()->hasAny(['q', 'sort', 'page']),
 ])
 
 @php
-    $labels = ['board' => 'Syllabus', 'class' => 'Grade', 'type' => 'Book type', 'subject' => 'Subject'];
-    $display = fn ($key, $value) => $key === 'class' ? \App\Support\Catalog::classLabel($value) : $value;
-    $heading = $q !== ''
-        ? 'Results for <em>“'.e($q).'”</em>'
-        : (isset($active['class']) ? \App\Support\Catalog::classLabel($active['class']).' <em>books</em>' : 'School <em>books</em>');
+    $labels = ['board' => 'Board', 'section' => 'Section', 'class' => 'Grade', 'subject' => 'Subject'];
+    $display = fn ($key, $value) => match ($key) {
+        'class' => \App\Support\Catalog::classLabel($value),
+        'section' => \App\Support\Catalog::sectionLabel($value),
+        default => $value,
+    };
+    $heading = match (true) {
+        $q !== '' => 'Results for <em>“'.e($q).'”</em>',
+        isset($active['board']) => e($active['board']).' <em>books</em>',
+        isset($active['class']) => \App\Support\Catalog::classLabel($active['class']).' <em>books</em>',
+        default => 'School <em>books</em>',
+    };
 @endphp
 
 @section('content')
@@ -17,7 +24,7 @@
         'crumbs' => ['Books' => null],
         'eyebrow' => 'Catalogue',
         'title' => $heading,
-        'intro' => '560+ titles from Nursery to Grade 10 for CBSE, Karnataka, Andhra Pradesh and Telangana. Filter by syllabus, grade, subject or book type.',
+        'intro' => 'Nursery to Grade 10 for CBSE and eleven state boards. Pick your board, then the section and grade, just like our book lists by state.',
     ])
 
     <form method="get" action="{{ route('books.index') }}" class="wrap catalogue" data-catalogue>
@@ -34,7 +41,7 @@
             @foreach ($filters as $key => $options)
                 <fieldset class="filter-group">
                     <legend>{{ $labels[$key] }}</legend>
-                    <div class="filter-options {{ $key === 'class' ? 'filter-options--chips' : '' }}">
+                    <div class="filter-options {{ $key === 'class' ? 'filter-options--chips' : '' }} {{ $key === 'subject' ? 'filter-options--scroll' : '' }}" @if ($key === 'subject') data-lenis-prevent @endif>
                         <label class="filter-option">
                             <input type="radio" name="{{ $key }}" value="" @checked(! isset($active[$key]))>
                             <span>All</span>
@@ -42,7 +49,7 @@
                         @foreach ($options as $option)
                             <label class="filter-option">
                                 <input type="radio" name="{{ $key }}" value="{{ $option }}" @checked(($active[$key] ?? null) === $option)>
-                                <span>{{ $key === 'class' ? $option : $option }}</span>
+                                <span>{{ $key === 'section' ? \App\Support\Catalog::sectionLabel($option) : $option }}</span>
                             </label>
                         @endforeach
                     </div>

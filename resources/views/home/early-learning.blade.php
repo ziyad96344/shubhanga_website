@@ -8,7 +8,7 @@
                 <h2 id="early-title" data-split>For the <em>youngest</em> readers</h2>
                 <p>Thirteen pre-primary series for Nursery, PP1 and PP2: Rhymewing, FableNest, Mathspire, Soundnest, Tinkerhive and more.</p>
             </div>
-            <a href="{{ route('books.index', ['type' => 'Pre-primary']) }}" class="btn btn--ghost">See all early learning</a>
+            <a href="{{ route('books.index', ['section' => 'Pre-primary']) }}" class="btn btn--ghost">See all early learning</a>
         </div>
         <div class="book-grid" data-reveal-cards>
             @foreach ($books as $book)

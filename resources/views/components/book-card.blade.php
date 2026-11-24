@@ -4,7 +4,7 @@
     $off = $book['mrp'] > $book['price'] ? round((1 - $book['price'] / $book['mrp']) * 100) : 0;
     $classLabel = \App\Support\Catalog::classLabel($book['class']);
     $name = $book['name'] ?? trim($book['title'].' '.$book['subject']);
-    $boardLabel = $book['board_label'] ?? ($book['board'] === 'All boards' ? 'All syllabuses' : $book['board']);
+    $boardLabel = $book['board_label'] ?? $book['board'] ?? '';
 @endphp
 
 <article {{ $attributes->merge(['class' => 'book-card']) }}>

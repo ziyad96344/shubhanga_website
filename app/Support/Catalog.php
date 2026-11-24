@@ -12,8 +12,8 @@ use Illuminate\Support\Collection;
  */
 class Catalog
 {
-    /** Boards that also use the "All boards" pre-primary and primary books. */
-    public const ALL_BOARDS = 'All boards';
+    /** Filters shown in the catalogue sidebar, in source-site order. */
+    public const FILTERS = ['board', 'section', 'class', 'subject'];
 
     public static function books(): Collection
     {
@@ -27,12 +27,13 @@ class Catalog
 
     /**
      * True when every word of the query appears somewhere in the book's
-     * title, series, subject, class, board or type ("grade 10 science").
+     * title, series, subject, class, boards, section or type ("grade 10 science").
      */
     public static function matches(array $book, string $query): bool
     {
         $haystack = mb_strtolower(implode(' ', [
-            $book['name'], $book['series'], $book['subject'], $book['class_label'], 'grade '.$book['class'], $book['board'], $book['type'],
+            $book['name'], $book['listed_as'], $book['series'], $book['subject'], $book['class_label'], 'grade '.$book['class'],
+            implode(' ', $book['boards']), $book['section'], $book['type'],
         ]));
 
         foreach (preg_split('/\s+/', mb_strtolower($query)) as $word) {
@@ -44,10 +45,25 @@ class Catalog
         return true;
     }
 
-    /** Whether a book is used on a given board (shared books count for every board). */
+    /** Whether a book is listed on a given board page. */
     public static function onBoard(array $book, string $board): bool
     {
-        return $book['board'] === $board || $book['board'] === self::ALL_BOARDS;
+        return in_array($board, $book['boards'], true);
+    }
+
+    /** Whether a book passes every active filter, optionally ignoring one key. */
+    public static function passes(array $book, array $active, ?string $except = null): bool
+    {
+        foreach ($active as $key => $value) {
+            if ($key === $except) {
+                continue;
+            }
+            if ($key === 'board' ? ! static::onBoard($book, $value) : $book[$key] !== $value) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static function classLabel(string $class): string
@@ -55,25 +71,47 @@ class Catalog
         return is_numeric($class) ? 'Grade '.$class : $class;
     }
 
-    /**
-     * Filter options shown in the catalogue sidebar.
-     */
+    /** Every value each filter accepts. */
     public static function filters(): array
     {
         $books = static::books();
 
         return [
             'board' => config('catalog.boards'),
-            'class' => collect(config('catalog.classes'))
-                ->filter(fn ($class) => $books->contains('class', $class))
-                ->values()
-                ->all(),
-            'type' => collect(config('catalog.book_types'))
-                ->filter(fn ($type) => $books->contains('type', $type))
-                ->values()
-                ->all(),
+            'section' => array_keys(config('catalog.sections')),
+            'class' => collect(config('catalog.classes'))->filter(fn ($class) => $books->contains('class', $class))->values()->all(),
             'subject' => $books->pluck('subject')->unique()->sort()->values()->all(),
         ];
+    }
+
+    /**
+     * Options to show for each filter given the others already chosen, like
+     * the source site's board page > section > grade drill-down. A value
+     * that is already active always stays visible.
+     */
+    public static function facets(array $active): array
+    {
+        $books = static::books();
+        $facets = [];
+        foreach (static::filters() as $key => $values) {
+            $pool = $books->filter(fn ($book) => static::passes($book, $active, $key));
+            $facets[$key] = collect($values)->filter(function ($value) use ($key, $pool, $active) {
+                if (($active[$key] ?? null) === $value) {
+                    return true;
+                }
+
+                return $key === 'board'
+                    ? $pool->contains(fn ($book) => static::onBoard($book, $value))
+                    : $pool->contains($key, $value);
+            })->values()->all();
+        }
+
+        return $facets;
+    }
+
+    public static function sectionLabel(string $section): string
+    {
+        return config("catalog.sections.$section.label", $section);
     }
 
     private static function enrich(array $book): array
@@ -85,9 +123,15 @@ class Catalog
         $book['subject'] = $book['subject_filter'] ?? $book['subject'];
 
         $book['class_label'] = static::classLabel($book['class']);
-        $book['board_label'] = $book['board'] === self::ALL_BOARDS ? 'All syllabuses' : $book['board'];
+        $book['section_label'] = static::sectionLabel($book['section']);
+        $book['board_label'] = match (true) {
+            $book['section'] === 'CBSE High School' => 'CBSE',
+            count($book['boards']) >= 6 => 'All states',
+            default => implode(', ', $book['boards']),
+        };
+        $book['board'] = $book['board_label'];
         $book['off'] = $book['mrp'] > $book['price'] ? (int) round((1 - $book['price'] / $book['mrp']) * 100) : 0;
-        $book['language'] = in_array($book['subject'], ['Hindi', 'Telugu'], true) ? $book['subject'] : 'English';
+        $book['language'] = in_array($book['subject'], ['Hindi', 'Telugu', 'Kannada', 'Tamil'], true) ? $book['subject'] : 'English';
         $book['description'] = static::describe($book);
         $book['contents'] = static::features($book);
 
@@ -96,7 +140,12 @@ class Catalog
 
     private static function describe(array $book): string
     {
-        $syllabus = $book['board'] === self::ALL_BOARDS ? 'schools on every syllabus' : $book['board'].' schools';
+        $syllabus = match (true) {
+            $book['section'] === 'CBSE High School' => 'CBSE schools',
+            count($book['boards']) >= 6 => 'schools across every state',
+            $book['section'] === 'State Board High School' => $book['board_label'].' State Board schools',
+            default => 'schools in '.$book['board_label'],
+        };
 
         return match ($book['type']) {
             'Pre-primary' => "{$book['series']} is part of the Shubhanga pre-primary programme for {$book['class_label']}: playful, activity-based pages for {$book['subject']} that build school readiness, aligned to NEP 2020 and NCF 2023.",

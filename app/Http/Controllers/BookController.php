@@ -11,6 +11,7 @@ class BookController extends Controller
     private const PER_PAGE = 12;
 
     private const SORTS = [
+        'catalogue' => 'Catalogue order',
         'popular' => 'Most popular',
         'new' => 'Newest first',
         'price_asc' => 'Price: low to high',
@@ -30,28 +31,28 @@ class BookController extends Controller
             }
         }
 
-        $sort = array_key_exists($request->query('sort'), self::SORTS) ? $request->query('sort') : 'popular';
+        $sort = array_key_exists($request->query('sort'), self::SORTS) ? $request->query('sort') : 'catalogue';
         $q = trim(mb_substr((string) $request->query('q', ''), 0, 80));
+
+        // Old links used ?type=; map the two that have a section equivalent.
+        if (! isset($active['section']) && in_array($request->query('type'), ['Pre-primary', 'Practice books'], true)) {
+            $active['section'] = $request->query('type') === 'Pre-primary' ? 'Pre-primary' : 'CBSE High School';
+        }
 
         $books = Catalog::books()->filter(function (array $book) use ($active, $q) {
             if ($q !== '' && ! Catalog::matches($book, $q)) {
                 return false;
             }
 
-            foreach ($active as $key => $value) {
-                if ($key === 'board' ? ! Catalog::onBoard($book, $value) : $book[$key] !== $value) {
-                    return false;
-                }
-            }
-
-            return true;
+            return Catalog::passes($book, $active);
         });
 
         $books = match ($sort) {
             'new' => $books->sortByDesc('new'),
             'price_asc' => $books->sortBy('price'),
             'price_desc' => $books->sortByDesc('price'),
-            default => $books->sortByDesc('reviews'),
+            'popular' => $books->sortByDesc('reviews'),
+            default => $books, // the source site's board > section > grade order
         };
 
         $page = max(1, (int) $request->query('page', 1));
@@ -65,7 +66,7 @@ class BookController extends Controller
 
         return view('books.index', [
             'books' => $paginator,
-            'filters' => $filters,
+            'filters' => Catalog::facets($active),
             'active' => $active,
             'sort' => $sort,
             'sorts' => self::SORTS,
@@ -103,7 +104,8 @@ class BookController extends Controller
 
         $related = Catalog::books()
             ->where('slug', '!=', $book['slug'])
-            ->sortByDesc(fn ($other) => ($other['series'] === $book['series'] ? 2 : 0) + ($other['type'] === $book['type'] ? 1 : 0))
+            ->filter(fn ($other) => array_intersect($other['boards'], $book['boards']))
+            ->sortByDesc(fn ($other) => ($other['class'] === $book['class'] ? 4 : 0) + ($other['section'] === $book['section'] ? 2 : 0) + ($other['series'] === $book['series'] ? 1 : 0) - ($other['cover_pending'] ? 3 : 0))
             ->take(4)
             ->values();
 

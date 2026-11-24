@@ -25,12 +25,13 @@
             <div>
                 <h3>Shop</h3>
                 <ul>
-                    <li><a href="{{ route('books.index', ['type' => 'Pre-primary']) }}">Pre-primary</a></li>
+                    <li><a href="{{ route('books.index', ['section' => 'Pre-primary']) }}">Pre-primary</a></li>
+                    <li><a href="{{ route('books.index', ['section' => 'Primary']) }}">Primary school</a></li>
                     <li><a href="{{ route('books.index', ['board' => 'CBSE']) }}">CBSE books</a></li>
                     <li><a href="{{ route('books.index', ['board' => 'Karnataka']) }}">Karnataka books</a></li>
                     <li><a href="{{ route('books.index', ['board' => 'Andhra Pradesh']) }}">Andhra Pradesh books</a></li>
                     <li><a href="{{ route('books.index', ['board' => 'Telangana']) }}">Telangana books</a></li>
-                    <li><a href="{{ route('books.index', ['type' => 'Practice books']) }}">CBSE Smart Scores</a></li>
+                    <li><a href="{{ route('books.index', ['board' => 'Tamil Nadu']) }}">Tamil Nadu books</a></li>
                 </ul>
             </div>
             <div>
