@@ -2018,3 +2018,256 @@ textarea.field-input { resize: vertical; min-height: 96px; }
     transition: background-color .25s;
 }
 .mega-boards a:hover { background: var(--color-cream); color: var(--color-ink) !important; }
+
+
+/* New releases: soft red ribbon waves */
+.section--waves { background: #fdeeee url('/images/site/waves.webp?v=2') center / cover no-repeat; }
+
+/* ===== Journey, editorial redesign: burgundy waves, pastel cards ===== */
+.journey { background: #6e0716 url('/images/site/journey-bg.webp') left bottom / cover no-repeat; }
+.journey-intro h2 { text-transform: none; line-height: 1.02; font-size: clamp(2.2rem, 3.6vw, 3.5rem); max-width: 11ch; }
+.journey-intro h2 em { display: block; color: #fff; white-space: nowrap; }
+.journey-intro .eyebrow--light { color: rgba(255, 255, 255, .85); }
+.journey-intro p { font-size: .95rem; max-width: 36ch; }
+.journey-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 6px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--color-brand-deep);
+    font-size: .88rem;
+    font-weight: 600;
+    box-shadow: 0 14px 30px -16px rgba(0, 0, 0, .55);
+    transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out);
+}
+.journey-cta:hover { transform: translateY(-2px); box-shadow: 0 18px 34px -16px rgba(0, 0, 0, .6); }
+.journey-cta svg { transition: transform .35s var(--ease-out); }
+.journey-cta:hover svg { transform: translateX(3px); }
+
+.stage {
+    background: #fff8fa url('/images/site/stage-card.webp') center / 100% 100% no-repeat;
+    border-radius: 26px;
+    box-shadow: 0 30px 60px -30px rgba(40, 0, 8, .65);
+}
+.stage-step {
+    padding: 5px 12px;
+    border: 1px solid rgba(200, 16, 46, .35);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .7);
+    font-size: .64rem;
+    letter-spacing: .18em;
+}
+.stage-count { border: 1px solid rgba(200, 16, 46, .2); background: rgba(255, 255, 255, .7); }
+.stage-tags li { background: rgba(255, 255, 255, .8); border-color: rgba(34, 21, 24, .12); }
+.stage .link-arrow { color: var(--color-ink); border-bottom-color: var(--color-brand); }
+.stage-books .cover img { box-shadow: 0 22px 34px -18px rgba(60, 0, 12, .55); }
+
+/* Stage dots and arrows, under the track on desktop */
+.journey-nav { display: none; }
+@media (min-width: 1000px) {
+    .journey-progress { right: calc(50% + 150px); bottom: 50px; }
+    .journey-nav {
+        position: absolute;
+        left: calc(50% - 120px);
+        bottom: 30px;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .journey-dots { display: flex; gap: 8px; margin-right: 18px; }
+    .journey-dots span { width: 7px; height: 7px; border-radius: 999px; background: rgba(255, 255, 255, .35); transition: background-color .3s, width .3s; }
+    .journey-dots span.is-active { width: 22px; background: #fff; }
+    .journey-arrow {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, .45);
+        background: transparent;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color .3s, color .3s;
+    }
+    .journey-arrow:hover, .journey-arrow--next { background: #fff; color: var(--color-brand-deep); }
+    .journey-arrow--next:hover { background: var(--color-brand-soft); }
+}
+@media (max-width: 999px) {
+    .stage { background-size: cover; background-position: right bottom; }
+}
+
+/* Explore our books: tighter head with tabs beside it, soft school-doodle backdrop */
+.trending {
+    padding-block: clamp(56px, 6vw, 92px);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, .86) 55%, #fff),
+        #f8efec url('/images/site/doodle.webp?v=2') center top / 1024px auto repeat;
+}
+.trending-head { margin-bottom: clamp(28px, 3vw, 44px); gap: 28px; }
+.trending .tabs { background: rgba(255, 255, 255, .85); backdrop-filter: blur(6px); box-shadow: 0 10px 30px -22px rgba(60, 0, 12, .5); }
+@media (min-width: 900px) { .trending-head .tabs { justify-self: end; } .trending-head h2 { white-space: nowrap; } }
+
+/* ===== Lower page rhythm: dark and light sections alternate, like the top ===== */
+.tone-dark { background-color: #4a0510; background-position: center; background-size: cover; background-repeat: no-repeat; color: #fff; }
+/* each dark band has its own photo, tinted to the brand red and deepened for text */
+.inside.tone-dark {
+    background-image: linear-gradient(100deg, rgba(58, 4, 14, .9) 0%, rgba(74, 5, 16, .62) 45%, rgba(74, 5, 16, .3) 100%), url('/images/site/journey-inside.webp');
+}
+.tone-dark[aria-labelledby="stories-title"] {
+    background-image: linear-gradient(180deg, rgba(52, 3, 12, .82), rgba(84, 6, 20, .5) 50%, rgba(52, 3, 12, .85)), url('/images/site/stories-bg.webp');
+}
+.board.tone-dark {
+    background-image: linear-gradient(90deg, rgba(48, 3, 11, .93) 0%, rgba(70, 5, 16, .84) 55%, rgba(70, 5, 16, .62) 100%), url('/images/site/schools-bg.webp');
+    background-position: right center;
+}
+.tone-dark .eyebrow { color: rgba(255, 255, 255, .85); }
+.tone-dark .section-head h2, .tone-dark .inside-copy h2, .tone-dark .board-row h3 { color: #fff; }
+.tone-dark .section-head h2 em, .tone-dark .inside-copy h2 em, .tone-dark .board-row h3 em { color: var(--color-brand-soft); }
+.tone-dark .section-head p, .tone-dark .inside-copy p, .tone-dark .board-row p, .tone-dark .chalk { color: rgba(255, 255, 255, .75); }
+.tone-dark .inside-copy ul, .tone-dark .board-rows, .tone-dark .board-row { border-color: rgba(255, 255, 255, .18); }
+.tone-dark .inside-copy li svg, .tone-dark .board-row h3 span { color: var(--color-brand-soft); }
+/* buttons: white solid, outline ghost */
+.tone-dark .btn:not(.btn--ghost) { background: #fff; color: var(--color-brand-deep); border-color: #fff; }
+.tone-dark .btn:not(.btn--ghost)::before { background: var(--color-brand-soft); }
+.tone-dark .btn:not(.btn--ghost):hover { color: var(--color-brand-deep); border-color: var(--color-brand-soft); }
+.tone-dark .btn--ghost { color: #fff; border-color: rgba(255, 255, 255, .45); }
+.tone-dark .btn--ghost::before { background: #fff; }
+.tone-dark .btn--ghost:hover { color: var(--color-brand-deep); border-color: #fff; }
+/* testimonial cards stay as light cards on the dark band */
+.tone-dark .story-card { background: #fff8fa url('/images/site/stage-card.webp') center / cover no-repeat; color: var(--color-ink); border-color: transparent; box-shadow: 0 30px 60px -34px rgba(40, 0, 8, .7); }
+.tone-dark .story-card:hover { box-shadow: 0 36px 66px -32px rgba(40, 0, 8, .8); }
+
+/* light awards strip between the dark bands */
+.awards { background: #fff; border-block: 0; }
+
+/* resources: the same faint school doodles as "Explore our books" */
+.tone-doodle {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .55) 70%, #fff),
+        #fbf5f6 url('/images/site/resources-bg.webp') center / cover no-repeat;
+}
+/* early learning: real pencils on pink, faded behind the heading side */
+.early.section--waves {
+    background:
+        linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, .92) 38%, rgba(255, 255, 255, .55) 75%, rgba(255, 255, 255, .35) 100%),
+        #fdeeee url('/images/site/early-bg.webp') right center / cover no-repeat;
+}
+
+/* ===== Testimonials: compact slider ===== */
+.stories { padding-block: clamp(56px, 6vw, 88px); }
+.stories-head { margin-bottom: clamp(24px, 3vw, 36px); }
+.tone-dark .round-btn { border-color: rgba(255, 255, 255, .4); color: #fff; background: transparent; }
+.tone-dark .round-btn:hover:not(:disabled) { background: #fff; color: var(--color-brand-deep); border-color: #fff; }
+.tone-dark .round-btn:disabled { opacity: .35; }
+.story-track { grid-auto-columns: minmax(270px, 84vw); padding-bottom: 8px; }
+@media (min-width: 600px) { .story-track { grid-auto-columns: 360px; } }
+@media (min-width: 1000px) { .story-track { grid-auto-columns: 400px; } }
+.tone-dark .story-card {
+    gap: 18px;
+    padding: 28px 28px 24px;
+    background: #fff;
+    border: 0;
+    border-top: 3px solid var(--color-brand);
+    border-radius: 20px;
+    box-shadow: 0 26px 50px -30px rgba(30, 0, 6, .75);
+}
+.story-top { justify-content: space-between; }
+.story-quote { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 999px; background: var(--color-cream); color: var(--color-brand); }
+.story-stars { display: flex; gap: 2px; color: #e8a33d; }
+.story-card blockquote { font-size: clamp(1.15rem, 1.4vw, 1.3rem); line-height: 1.4; color: var(--color-ink); }
+.story-meta { padding-top: 16px; }
+
+/* Early learning: less air above the heading */
+.early { padding-top: clamp(48px, 5vw, 72px); }
+
+/* ===== Footer: links on top, newsletter and contact in one row ===== */
+.site-footer { padding-top: clamp(56px, 6vw, 80px); }
+.footer-top { padding-bottom: 40px; }
+@media (min-width: 1000px) { .footer-top { grid-template-columns: 1.2fr repeat(4, 1fr); } }
+.footer-top ul.social--footer { margin: 4px 0 0; }
+.footer-tagline { margin-bottom: 20px; }
+.footer-mid {
+    display: grid;
+    gap: 28px;
+    padding-block: 36px;
+    border-bottom: 1px solid rgba(255, 255, 255, .12);
+    align-items: start;
+}
+@media (min-width: 700px) { .footer-mid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1100px) { .footer-mid { grid-template-columns: 1.6fr 1.3fr repeat(3, 1fr); gap: 36px; } }
+.footer-mid h3 { font-size: 1.3rem; color: #fff; margin-bottom: 6px; }
+.footer-mid p { color: rgba(255, 255, 255, .72); font-size: .92rem; }
+.footer-news .newsletter { margin-top: 14px; }
+.footer-label, .footer-mid .phone span { display: block; margin-bottom: 8px; font-size: .64rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: rgba(255, 255, 255, .5); }
+.footer-mid .phone strong { display: block; font-family: var(--font-display); font-weight: 400; font-size: 1.2rem; color: #fff; white-space: nowrap; }
+@media (max-width: 699px) {
+    .footer-mid { grid-template-columns: 1fr 1fr; gap: 22px 16px; }
+    .footer-news, .footer-address { grid-column: 1 / -1; }
+    .footer-mid .phone strong { font-size: 1.05rem; }
+}
+
+/* Footer without newsletter: address plus three phone lines */
+@media (min-width: 1100px) { .footer-mid { grid-template-columns: 1.8fr repeat(3, 1fr); } }
+@media (max-width: 699px) { .footer-address { grid-column: 1 / -1; } }
+.footer-credit a { color: #fff; font-weight: 500; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255, 255, 255, .4); }
+.footer-credit a:hover { text-decoration-color: #fff; }
+
+/* The big wordmark's box overlaps the bottom row on wide screens: keep links clickable */
+.footer-word { pointer-events: none; }
+.footer-bottom { position: relative; z-index: 1; }
+
+/* ===== Hero fits the screen exactly: one viewport tall, content centred under the header ===== */
+.hero {
+    min-height: 0;
+    height: 100vh;
+    height: 100svh;
+    justify-content: center;
+    padding-top: calc(var(--header-h) + clamp(16px, 3vh, 40px));
+    padding-bottom: clamp(28px, 5vh, 64px);
+}
+/* sizes follow the viewport height too, so short laptop screens still fit */
+.hero h1 { font-size: clamp(2.3rem, min(5vw, 8.6vh), 4.8rem); margin-top: clamp(14px, 2.4vh, 26px); }
+.hero-lede { margin-top: clamp(14px, 2.6vh, 28px); }
+.hero-ctas { margin-top: clamp(18px, 3.4vh, 36px); }
+@media (min-width: 1000px) {
+    .finder { padding: clamp(24px, 4vh, 44px) clamp(26px, 3vw, 44px); }
+    .finder form { margin-top: clamp(16px, 2.6vh, 26px); gap: clamp(14px, 2.2vh, 22px); }
+}
+/* phones: content can be taller than the screen, so let it grow */
+@media (max-width: 999px) {
+    .hero { height: auto; min-height: 100svh; }
+}
+
+/* New releases: shorter band */
+.releases { padding-block: clamp(48px, 5vw, 76px) clamp(36px, 4vw, 60px); }
+.releases .section-head { margin-bottom: clamp(16px, 2vw, 28px); }
+.releases .track { padding-top: 8px; padding-bottom: 12px; }
+@media (min-width: 1000px) { .releases .track { grid-auto-columns: 215px; } }
+.releases .wrap[style] { margin-top: 12px !important; }
+
+/* For schools + Resources read as one light block: the notebook photo sits
+   behind For schools and fades to white, Resources continues on white. */
+.board.tone-paper {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, .15) 0%, rgba(255, 255, 255, .55) 55%, #fff 100%),
+        #fbf5f6 url('/images/site/resources-bg.webp') center top / cover no-repeat;
+    padding-bottom: clamp(32px, 4vw, 56px);
+}
+.board.tone-paper .board-rows, .board.tone-paper .board-row { border-color: rgba(34, 21, 24, .12); }
+.board.tone-paper .board-row { background: transparent; }
+.tone-doodle { background: #fff; padding-top: clamp(32px, 4vw, 56px); }
+
+/* Checkout coupon */
+.summary-discount dd { color: #1d7a3a; font-weight: 600; }
+.coupon-box { display: grid; gap: 8px; margin: 4px 0 16px; padding-top: 14px; border-top: 1px dashed var(--line); }
+.coupon-row { display: flex; gap: 8px; }
+.coupon-row .field-input { flex: 1; min-width: 0; text-transform: uppercase; }
+.coupon-apply { min-height: 44px; padding: 0 18px; }
+.coupon-applied { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; background: #eef8f1; color: #1d5c32; font-size: .9rem; }
+.coupon-remove { border: 0; background: none; color: var(--color-brand); font-weight: 600; font-size: .82rem; cursor: pointer; text-decoration: underline; }
+.coupon-ok { color: #1d7a3a; font-size: .85rem; }
+.add-btn--off, .buy-add.is-disabled { display: inline-grid; place-items: center; opacity: .5; cursor: not-allowed; pointer-events: none; }

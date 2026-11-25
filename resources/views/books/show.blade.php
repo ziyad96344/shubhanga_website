@@ -2,6 +2,8 @@
     'title' => $book['name'].', '.$book['class_label'].' | '.config('site.full_name'),
     'description' => Str::limit($book['description'], 155),
     'image' => $book['image'],
+    'imageAlt' => $book['name'].', '.$book['class_label'].' cover',
+    'ogType' => 'product',
 ])
 
 @php
@@ -12,15 +14,22 @@
 @push('head')
     <script type="application/ld+json">{!! json_encode([
         '@context' => 'https://schema.org',
-        '@type' => 'Book',
-        'name' => $book['name'],
+        '@type' => ['Book', 'Product'],
+        '@id' => url()->current().'#book',
+        'name' => $book['name'].', '.$book['class_label'],
+        'description' => $book['description'],
         'image' => url($book['image']),
+        'sku' => $book['slug'],
+        'url' => url()->current(),
+        'brand' => ['@type' => 'Brand', 'name' => $book['series'] === 'Shubhanga' ? config('site.full_name') : $book['series']],
         'bookFormat' => 'https://schema.org/Paperback',
         'inLanguage' => $book['language'],
         'educationalLevel' => $book['class_label'],
-        'publisher' => ['@type' => 'Organization', 'name' => config('site.full_name')],
-        'aggregateRating' => ['@type' => 'AggregateRating', 'ratingValue' => $book['rating'], 'reviewCount' => $book['reviews']],
-        'offers' => ['@type' => 'Offer', 'price' => $book['price'], 'priceCurrency' => 'INR', 'availability' => 'https://schema.org/InStock', 'url' => url()->current()],
+        'educationalAlignment' => collect($book['boards'])->map(fn ($board) => ['@type' => 'AlignmentObject', 'alignmentType' => 'educationalSubject', 'educationalFramework' => $board === 'CBSE' ? 'CBSE' : $board.' State Board', 'targetName' => $book['subject'].', '.$book['class_label']])->values()->all(),
+        'about' => $book['subject'],
+        'audience' => ['@type' => 'EducationalAudience', 'educationalRole' => 'student'],
+        'publisher' => ['@id' => route('home').'#organization'],
+        'offers' => ['@type' => 'Offer', 'price' => $book['price'], 'priceCurrency' => 'INR', 'availability' => 'https://schema.org/InStock', 'itemCondition' => 'https://schema.org/NewCondition', 'url' => url()->current(), 'seller' => ['@id' => route('home').'#organization']],
     ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     <script type="application/ld+json">{!! json_encode([
         '@context' => 'https://schema.org',
@@ -28,7 +37,8 @@
         'itemListElement' => [
             ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => route('home')],
             ['@type' => 'ListItem', 'position' => 2, 'name' => 'Books', 'item' => route('books.index')],
-            ['@type' => 'ListItem', 'position' => 3, 'name' => $book['name'], 'item' => url()->current()],
+            ['@type' => 'ListItem', 'position' => 3, 'name' => $book['class_label'], 'item' => route('books.index', ['class' => $book['class']])],
+            ['@type' => 'ListItem', 'position' => 4, 'name' => $book['name'], 'item' => url()->current()],
         ],
     ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
 @endpush
@@ -90,6 +100,9 @@
                             <span data-qty-value>1</span>
                             <button type="button" data-step="1" aria-label="Add one">+</button>
                         </div>
+                        @if (($book['stock'] ?? 1) <= 0)
+                            <span class="btn buy-add is-disabled" aria-disabled="true">Out of stock</span>
+                        @else
                         <button type="button" class="btn buy-add"
                                 data-add-to-cart
                                 data-id="{{ $book['slug'] }}"
@@ -99,6 +112,7 @@
                                 data-image="{{ $book['image'] }}">
                             Add to cart
                         </button>
+                        @endif
                     </div>
                     <a href="{{ $whatsapp }}" class="btn btn--ghost buy-whatsapp" target="_blank" rel="noopener">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3.9 2.4c.1.2 1.6 2.5 4 3.5 1.5.6 2.1.7 2.8.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.5-.3Z"/></svg>

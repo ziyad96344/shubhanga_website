@@ -1,4 +1,30 @@
-@extends('layouts.app', ['title' => $post['title'].' | '.config('site.full_name'), 'description' => $post['excerpt'], 'image' => $post['image']])
+@extends('layouts.app', ['title' => $post['title'].' | '.config('site.full_name'), 'description' => $post['excerpt'], 'image' => $post['image'], 'imageAlt' => $post['title'], 'ogType' => 'article'])
+
+@push('head')
+    <script type="application/ld+json">{!! json_encode(array_filter([
+        '@context' => 'https://schema.org',
+        '@type' => 'BlogPosting',
+        'headline' => $post['title'],
+        'description' => $post['excerpt'],
+        'image' => url($post['image']),
+        'url' => url()->current(),
+        'mainEntityOfPage' => url()->current(),
+        'articleSection' => $post['tag'],
+        'datePublished' => $post['date'] ?: null,
+        'inLanguage' => 'en-IN',
+        'author' => ['@id' => route('home').'#organization'],
+        'publisher' => ['@id' => route('home').'#organization'],
+    ]), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+    <script type="application/ld+json">{!! json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => route('home')],
+            ['@type' => 'ListItem', 'position' => 2, 'name' => 'Blog', 'item' => route('blog.index')],
+            ['@type' => 'ListItem', 'position' => 3, 'name' => $post['title'], 'item' => url()->current()],
+        ],
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+@endpush
 
 @section('content')
     <article>
@@ -16,7 +42,7 @@
         </header>
 
         <div class="wrap article-figure">
-            <img src="{{ $post['image'] }}" alt="" loading="eager">
+            <img src="{{ $post['image'] }}" alt="{{ $post['title'] }}" loading="eager">
         </div>
 
         <div class="wrap narrow-page prose prose--article">

@@ -8,10 +8,6 @@ namespace App\Support;
  */
 class Cart
 {
-    public const FREE_SHIPPING_FROM = 499;
-
-    public const SHIPPING_FEE = 49;
-
     public const MAX_QTY = 50;
 
     private const KEY = 'cart';
@@ -44,14 +40,19 @@ class Cart
         session()->forget(self::KEY);
     }
 
-    /** Shipping is free on prepaid orders from ₹499; cash on delivery always pays the fee. */
+    public static function freeFrom(): int
+    {
+        return (int) config('site.shipping.free_from', 499);
+    }
+
+    /** Shipping is free on prepaid orders from the threshold; cash on delivery always pays the fee. */
     public static function shipping(int $subtotal, string $method = 'online'): int
     {
         if ($subtotal === 0) {
             return 0;
         }
 
-        return $method !== 'cod' && $subtotal >= self::FREE_SHIPPING_FROM ? 0 : self::SHIPPING_FEE;
+        return $method !== 'cod' && $subtotal >= static::freeFrom() ? 0 : (int) config('site.shipping.fee', 49);
     }
 
     /**
@@ -64,9 +65,10 @@ class Cart
 
         foreach (static::raw() as $slug => $qty) {
             $book = $books->get($slug);
-            if (! $book) {
-                continue; // book removed from the catalogue
+            if (! $book || $book['stock'] <= 0) {
+                continue; // book removed from the catalogue or sold out
             }
+            $qty = min($qty, $book['stock']);
             $items[] = [
                 'id' => $slug,
                 'name' => $book['name'],
@@ -81,12 +83,19 @@ class Cart
 
         $subtotal = array_sum(array_column($items, 'line_total'));
 
+        // A coupon applied at checkout stays in the session and is
+        // re-checked here, so an expired or used-up code drops off.
+        [$coupon] = \App\Models\Coupon::check(session('coupon'), $subtotal);
+        $discount = $coupon ? $coupon->discountFor($subtotal) : 0;
+
         return [
             'items' => $items,
             'count' => array_sum(array_column($items, 'qty')),
             'subtotal' => $subtotal,
+            'discount' => $discount,
+            'coupon' => $coupon ? ['code' => $coupon->code, 'label' => $coupon->label()] : null,
             'shipping' => static::shipping($subtotal),
-            'free_from' => self::FREE_SHIPPING_FROM,
+            'free_from' => static::freeFrom(),
         ];
     }
 }

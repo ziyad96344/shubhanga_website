@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Admin > Settings values override the config defaults.
+        \App\Models\Setting::applyToConfig();
     }
 }

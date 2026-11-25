@@ -21,5 +21,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initShopFinder();
     initCheckout();
     initSearch();
-    initAnimations(ready);
+    initAnimations(ready, lenis);
 });

@@ -7,19 +7,6 @@
                 <img src="{{ asset('images/brand/shubhanga-logo.webp') }}" alt="{{ $site['full_name'] }}" class="footer-logo" width="220" height="109" loading="lazy">
                 <p class="footer-tagline">Education First, Business Next.</p>
                 @include('partials.social', ['class' => 'social--footer'])
-                <h3>Get new titles and updates</h3>
-                <p>One email a month. No spam.</p>
-                @if (session('subscribed'))<p class="newsletter-done" role="status">Thanks, you are subscribed.</p>@endif
-                <form class="newsletter" method="post" action="{{ route('newsletter') }}" data-newsletter>
-                    @csrf
-                    <label for="nl-email" class="sr-only">Email address</label>
-                    <input id="nl-email" type="email" name="email" placeholder="Your email address" required autocomplete="email">
-                    <button type="submit" class="btn btn--gold">Subscribe</button>
-                </form>
-                <p style="margin-top: 28px">{{ $site['contact']['address'] }}</p>
-                @foreach ($site['contact']['phones'] as $phone)
-                    <div class="phone"><span>{{ $phone['label'] }}</span><strong>{{ $phone['number'] }}</strong></div>
-                @endforeach
             </div>
 
             <div>
@@ -67,8 +54,19 @@
             </div>
         </div>
 
+        <div class="footer-mid">
+            <div class="footer-address">
+                <span class="footer-label">Visit us</span>
+                <p>{{ $site['contact']['address'] }}</p>
+            </div>
+            @foreach ($site['contact']['phones'] as $phone)
+                <div class="phone"><span>{{ $phone['label'] }}</span><strong>{{ $phone['number'] }}</strong></div>
+            @endforeach
+        </div>
+
         <div class="footer-bottom">
             <span>© {{ date('Y') }} {{ $site['full_name'] }}. All rights reserved.</span>
+            <span class="footer-credit">Designed and developed by <a href="https://ottomern.com" target="_blank" rel="noopener">Ottomern Technologies</a></span>
             <ul>
                 @foreach ($site['social'] as $name => $link)
                     <li><a href="{{ $link }}" target="_blank" rel="noopener">{{ $name }}</a></li>

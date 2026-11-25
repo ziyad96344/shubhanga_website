@@ -8,3 +8,10 @@ site/hero-library.webp
   "Library stacks of books and bookshelf" by Shixart1985, Wikimedia Commons, CC BY 2.0.
   Placeholder: credit the photographer if it stays on the live site, or replace it
   with a Shubhanga photo.
+
+Section backgrounds (Wikimedia Commons; tinted, cropped and converted to WebP):
+- public/images/site/journey-inside.webp: "Mathematics (cryptography) on a blackboard.jpg" by David Malone, CC BY 4.0, https://commons.wikimedia.org/wiki/File:Mathematics_(cryptography)_on_a_blackboard.jpg
+- public/images/site/stories-bg.webp: "Children Reading Books at Montacute School(GN08820).jpg" by State Government Photographer, CC0, https://commons.wikimedia.org/wiki/File:Children_Reading_Books_at_Montacute_School(GN08820).jpg
+- public/images/site/schools-bg.webp: "Buntstifte -- 2021 -- 9156.jpg" by Dietmar Rabich, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Buntstifte_--_2021_--_9156.jpg
+- public/images/site/early-bg.webp: "Colored pencils lined up on pink surface.jpg" by Artsy Crafty, CC0, https://commons.wikimedia.org/wiki/File:Colored_pencils_lined_up_on_pink_surface.jpg
+- public/images/site/resources-bg.webp: "Pencil shavings on a notebook (Unsplash).jpg" by Angelina Litvin linalitvina, CC0, https://commons.wikimedia.org/wiki/File:Pencil_shavings_on_a_notebook_(Unsplash).jpg

@@ -33,6 +33,9 @@
                 <em>{{ $off }}% off</em>
             @endif
         </div>
+        @if (($book['stock'] ?? 1) <= 0)
+            <span class="add-btn add-btn--off">Out of stock</span>
+        @else
         <button type="button" class="add-btn"
                 data-add-to-cart
                 data-id="{{ $book['slug'] }}"
@@ -42,5 +45,6 @@
                 data-image="{{ $book['image'] }}">
             Add to cart
         </button>
+        @endif
     </div>
 </article>

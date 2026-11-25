@@ -2,22 +2,46 @@
 
 namespace App\Support;
 
+use App\Models\Book;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 
 /**
- * Read-only access to the catalogue in config/catalog.php.
+ * Read-only catalogue for the storefront.
  *
- * Adds the display fields the pages need. Swap this class for Eloquent
- * queries when the admin panel is wired in.
+ * Books live in the `books` table and are managed from the admin panel.
+ * Until that table is seeded, the list in config/catalog.php is used, so a
+ * fresh checkout still renders. Adds the display fields the pages need.
  */
 class Catalog
 {
     /** Filters shown in the catalogue sidebar, in source-site order. */
     public const FILTERS = ['board', 'section', 'class', 'subject'];
 
+    private static ?Collection $cache = null;
+
     public static function books(): Collection
     {
-        return collect(config('catalog.books'))->map(fn (array $book) => static::enrich($book));
+        return static::$cache ??= static::source()->map(fn (array $book) => static::enrich($book))->values();
+    }
+
+    /** Forget the per-request copy (after the admin saves a book). */
+    public static function flush(): void
+    {
+        static::$cache = null;
+    }
+
+    private static function source(): Collection
+    {
+        try {
+            if (Schema::hasTable('books') && Book::query()->exists()) {
+                return Book::active()->orderBy('sort_order')->orderBy('id')->get()->map(fn (Book $book) => $book->toCatalogArray());
+            }
+        } catch (\Throwable) {
+            // no database yet: fall back to the config list
+        }
+
+        return collect(config('catalog.books'))->map(fn (array $book) => $book + ['stock' => 100, 'custom_description' => null]);
     }
 
     public static function find(string $slug): ?array
@@ -132,7 +156,7 @@ class Catalog
         $book['board'] = $book['board_label'];
         $book['off'] = $book['mrp'] > $book['price'] ? (int) round((1 - $book['price'] / $book['mrp']) * 100) : 0;
         $book['language'] = in_array($book['subject'], ['Hindi', 'Telugu', 'Kannada', 'Tamil'], true) ? $book['subject'] : 'English';
-        $book['description'] = static::describe($book);
+        $book['description'] = filled($book['custom_description'] ?? null) ? $book['custom_description'] : static::describe($book);
         $book['contents'] = static::features($book);
 
         return $book;

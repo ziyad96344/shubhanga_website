@@ -25,7 +25,8 @@ class CartController extends Controller
             'qty' => ['nullable', 'integer', 'min:1', 'max:'.Cart::MAX_QTY],
         ]);
 
-        abort_unless(Catalog::find($data['slug']), 404);
+        $book = Catalog::find($data['slug']) ?? abort(404);
+        abort_if(($book['stock'] ?? 1) <= 0, 422, 'This book is out of stock.');
         Cart::add($data['slug'], (int) ($data['qty'] ?? 1));
 
         return $this->respond($request);

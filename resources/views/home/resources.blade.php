@@ -1,4 +1,4 @@
-<section class="section" aria-label="Free resources and articles">
+<section class="section tone-doodle" aria-label="Free resources and articles">
     <div class="wrap res-grid">
         <div>
             <div class="section-head" style="margin-bottom: 32px">

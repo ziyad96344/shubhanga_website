@@ -1,6 +1,6 @@
 @php($books = \App\Support\Catalog::books()->where('new', true))
 
-<section class="section" aria-labelledby="new-title" style="padding-bottom: clamp(48px, 6vw, 96px)">
+<section class="section section--waves releases" aria-labelledby="new-title">
     <div class="wrap section-head section-head--split">
         <div style="display: grid; gap: 22px; justify-items: start">
             <p class="eyebrow">New releases</p>

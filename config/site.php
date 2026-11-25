@@ -5,7 +5,8 @@
 | Site settings
 |--------------------------------------------------------------------------
 | Shubhanga Publications, taken from https://shubhanga.co.in.
-| Later these will come from the admin panel settings table.
+| Contact details, shipping and social links can be overridden from
+| Admin > Settings (the `settings` table); these are the defaults.
 */
 
 return [
@@ -23,6 +24,12 @@ return [
     'hero_image' => '/images/site/hero-library.webp',
 
     'announcement' => 'Free shipping on prepaid orders above ₹499. Cash on delivery available.',
+
+    // Editable in Admin > Settings.
+    'shipping' => [
+        'fee' => 49,
+        'free_from' => 499,
+    ],
 
     'contact' => [
         'address' => '3rd & 4th Floor, Balaji Empire, Jayabheri Enclave, Gachibowli, Hyderabad, Telangana 500032',

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Support\Cart;
 use Illuminate\Http\Request;
@@ -28,6 +30,28 @@ class CheckoutController extends Controller
             'codShipping' => Cart::shipping($cart['subtotal'], 'cod'),
             'onlineShipping' => Cart::shipping($cart['subtotal'], 'online'),
         ]);
+    }
+
+    /** Applies a coupon code to this visit's cart (checked again when the order is placed). */
+    public function applyCoupon(Request $request)
+    {
+        $code = strtoupper(trim((string) $request->input('coupon_code')));
+        [$coupon, $error] = Coupon::check($code, Cart::summary()['subtotal']);
+
+        if (! $coupon) {
+            return back()->withInput()->withErrors(['coupon_code' => $error ?? 'Enter a coupon code.']);
+        }
+
+        session(['coupon' => $coupon->code]);
+
+        return back()->withInput()->with('coupon_applied', $coupon->code.' applied: '.$coupon->label().'.');
+    }
+
+    public function removeCoupon()
+    {
+        session()->forget('coupon');
+
+        return back()->withInput();
     }
 
     public function store(Request $request)
@@ -60,16 +84,24 @@ class CheckoutController extends Controller
 
         $shipping = Cart::shipping($cart['subtotal'], $data['payment_method']);
         $online = $data['payment_method'] === 'online';
+        $discount = $cart['discount'];
+        $couponCode = $cart['coupon']['code'] ?? null;
 
-        $order = DB::transaction(function () use ($data, $cart, $shipping, $online, $request) {
+        $order = DB::transaction(function () use ($data, $cart, $shipping, $online, $request, $discount, $couponCode) {
             $order = Order::create($data + [
                 'number' => Order::newNumber(),
                 'subtotal' => $cart['subtotal'],
                 'shipping' => $shipping,
-                'total' => $cart['subtotal'] + $shipping,
+                'discount' => $discount,
+                'coupon_code' => $couponCode,
+                'total' => max(0, $cart['subtotal'] - $discount) + $shipping,
                 'status' => $online ? 'awaiting_payment' : 'placed',
                 'ip' => $request->ip(),
             ]);
+
+            if ($couponCode) {
+                Coupon::where('code', $couponCode)->increment('used_count');
+            }
 
             foreach ($cart['items'] as $item) {
                 $order->items()->create([
@@ -81,12 +113,21 @@ class CheckoutController extends Controller
                     'qty' => $item['qty'],
                     'line_total' => $item['line_total'],
                 ]);
+
+                // Stock goes down when the order is placed; cancelling in the admin puts it back.
+                $book = Book::where('slug', $item['id'])->first();
+                if ($book) {
+                    $book->decrement('stock', min($item['qty'], $book->stock));
+                    $book->increment('sold_count', $item['qty']);
+                }
             }
 
             return $order;
         });
 
         $this->remember($order);
+
+        session()->forget('coupon');
 
         if (! $online) {
             Cart::clear();
@@ -179,7 +220,9 @@ class CheckoutController extends Controller
     {
         $order->load('items');
         $lines = $order->items->map(fn ($i) => "{$i->qty} × {$i->name} ({$i->meta}) = ₹{$i->line_total}")->implode("\n");
-        $body = "Order {$order->number}\n\n{$lines}\n\nSubtotal: ₹{$order->subtotal}\nShipping: ₹{$order->shipping}\nTotal: ₹{$order->total}\n"
+        $body = "Order {$order->number}\n\n{$lines}\n\nSubtotal: ₹{$order->subtotal}\n"
+            .($order->discount ? "Coupon {$order->coupon_code}: -₹{$order->discount}\n" : '')
+            ."Shipping: ₹{$order->shipping}\nTotal: ₹{$order->total}\n"
             ."Payment: ".($order->payment_method === 'cod' ? 'Cash on delivery' : 'Paid online')."\n\n"
             ."{$order->name}, {$order->phone}\n{$order->address_line1} {$order->address_line2}\n{$order->city}, {$order->state} {$order->pincode}";
 

@@ -26,16 +26,27 @@ export function runPreloader() {
         const count = el.querySelector('[data-preloader-count]');
         const counter = { v: 0 };
 
-        gsap.timeline({ onComplete: () => { done(); } })
-            .from(el.querySelector('.preloader-logo'), { y: 30, scale: 0.92, opacity: 0, duration: 0.9, ease: 'power4.out' }, 0)
-            .from(el.querySelector('.preloader-tag'), { opacity: 0, y: 10, duration: 0.6 }, 0.35)
+        // The counter runs to 100 over ~2.6s; the wipe waits for that and
+        // for the page (fonts and hero photo) to finish loading.
+        const loaded = document.readyState === 'complete'
+            ? Promise.resolve()
+            : new Promise((r) => window.addEventListener('load', r, { once: true }));
+
+        const intro = gsap.timeline()
+            .from(el.querySelector('.preloader-logo'), { y: 30, scale: 0.92, opacity: 0, duration: 1.1, ease: 'power4.out' }, 0)
+            .from(el.querySelector('.preloader-tag'), { opacity: 0, y: 10, duration: 0.8 }, 0.5)
             .to(counter, {
                 v: 100,
-                duration: 1.4,
+                duration: 2.6,
                 ease: 'power2.inOut',
                 onUpdate: () => (count.textContent = Math.round(counter.v)),
             }, 0)
-            .add(() => resolve(), 1.55)
-            .to(el, { clipPath: 'inset(0% 0% 100% 0%)', duration: 0.9, ease: 'power4.inOut' }, 1.5);
+            .to({}, { duration: 0.35 }); // a beat at 100
+
+        Promise.all([intro.then(), loaded]).then(() => {
+            gsap.timeline({ onComplete: done })
+                .add(() => resolve(), 0.15)
+                .to(el, { clipPath: 'inset(0% 0% 100% 0%)', duration: 1.1, ease: 'power4.inOut' }, 0);
+        });
     });
 }

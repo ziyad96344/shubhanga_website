@@ -1,4 +1,4 @@
-<section class="section board" aria-labelledby="schools-title">
+<section class="section board tone-paper" aria-labelledby="schools-title">
     <div class="wrap" style="position: relative">
         <div class="section-head section-head--split">
             <div style="display: grid; gap: 22px; justify-items: start">

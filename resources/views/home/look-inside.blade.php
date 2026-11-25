@@ -1,6 +1,6 @@
 @php($book = \App\Support\Catalog::books()->firstWhere('slug', 'smart-scores-mathematics-part-1-class-10-cbse') ?? \App\Support\Catalog::books()->first())
 
-<section class="inside" aria-labelledby="inside-title" data-inside>
+<section class="inside tone-dark" aria-labelledby="inside-title" data-inside>
     <div class="wrap inside-grid">
         <div class="inside-copy">
             <p class="eyebrow">Look inside</p>

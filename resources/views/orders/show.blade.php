@@ -45,6 +45,9 @@
                 </ul>
                 <dl class="summary-rows">
                     <div><dt>Subtotal</dt><dd>₹{{ number_format($order->subtotal) }}</dd></div>
+                    @if ($order->discount)
+                        <div class="summary-discount"><dt>Coupon {{ $order->coupon_code }}</dt><dd>−₹{{ number_format($order->discount) }}</dd></div>
+                    @endif
                     <div><dt>Shipping</dt><dd>{{ $order->shipping ? '₹'.$order->shipping : 'Free' }}</dd></div>
                     <div class="summary-total"><dt>Total</dt><dd>₹{{ number_format($order->total) }}</dd></div>
                 </dl>

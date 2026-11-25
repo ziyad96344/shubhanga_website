@@ -20,7 +20,7 @@ const primeStroke = (path) => {
  * gsap.matchMedia so nothing runs when reduced motion is preferred,
  * and desktop-only pinned sections are reverted on small screens.
  */
-export function initAnimations(ready = Promise.resolve()) {
+export function initAnimations(ready = Promise.resolve(), lenis = null) {
     const mm = gsap.matchMedia();
 
     const motion = '(prefers-reduced-motion: no-preference)';
@@ -30,8 +30,9 @@ export function initAnimations(ready = Promise.resolve()) {
         // positions with the pin spacing already in place. They are split by
         // breakpoint so crossing 1000px only rebuilds these two sections.
         mm.add(`${motion} and (min-width: 1000px)`, () => {
-            journey(true);
+            const cleanup = journey(true, lenis);
             lookInside(true);
+            return cleanup;
         });
         mm.add(`${motion} and (max-width: 999px)`, () => {
             journey(false);
@@ -46,6 +47,13 @@ export function initAnimations(ready = Promise.resolve()) {
             chalkboard();
             blogThumbs();
             footerWord();
+            sectionCopy();
+        });
+
+        // Phones and tablets get their own touches in place of the pinned scenes.
+        mm.add(`${motion} and (max-width: 999px)`, () => {
+            mobileJourneyCovers();
+            mobileCovers();
         });
 
         ScrollTrigger.sort();
@@ -93,11 +101,15 @@ function headings() {
 
 /* Book grids and tracks: cards rise in a stagger when the row enters. */
 function cardReveals() {
+    const small = window.matchMedia('(max-width: 999px)').matches;
     $$('[data-reveal-cards]').forEach((group) => {
+        // Sliders on phones: cards come in from the right edge instead.
+        const slide = small && group.classList.contains('track');
         gsap.from(group.children, {
-            y: 70,
+            y: slide ? 0 : 70,
+            x: slide ? 120 : 0,
             opacity: 0,
-            rotation: (i) => (i % 2 ? 2 : -2),
+            rotation: (i) => (slide ? 0 : i % 2 ? 2 : -2),
             duration: 0.9,
             stagger: 0.08,
             ease: 'power3.out',
@@ -109,7 +121,7 @@ function cardReveals() {
 
 /* Class journey: on desktop the section pins and vertical scroll moves the
    stages sideways. Covers fan out as each stage reaches the centre. */
-function journey(desktop) {
+function journey(desktop, lenis = null) {
     const section = $('[data-journey]');
     const track = $('[data-journey-track]');
     if (!section || !track) return;
@@ -150,6 +162,32 @@ function journey(desktop) {
         scrollTrigger: { trigger: section, start: 'top top', end: () => '+=' + distance(), scrub: true },
     });
 
+    // Dots and arrows: each stage is a stop on the scrubbed scroll.
+    const st = scroller.scrollTrigger;
+    const dots = $$('.journey-dots span', section);
+    const stops = () => stages.map((stage, i) => (i === 0 ? 0 : Math.min(1, (stage.offsetLeft - stages[0].offsetLeft) / distance())));
+    const current = () => {
+        const s = stops();
+        return s.reduce((best, stop, i) => (Math.abs(stop - st.progress) < Math.abs(s[best] - st.progress) ? i : best), 0);
+    };
+    const syncDots = () => {
+        const i = current();
+        dots.forEach((dot, j) => dot.classList.toggle('is-active', j === i));
+    };
+    const go = (step) => {
+        const s = stops();
+        const i = Math.max(0, Math.min(s.length - 1, current() + step));
+        const y = st.start + s[i] * (st.end - st.start);
+        lenis ? lenis.scrollTo(y, { duration: 1.2 }) : window.scrollTo({ top: y, behavior: 'smooth' });
+    };
+    const prev = $('[data-journey-prev]', section);
+    const next = $('[data-journey-next]', section);
+    const onPrev = () => go(-1);
+    const onNext = () => go(1);
+    prev?.addEventListener('click', onPrev);
+    next?.addEventListener('click', onNext);
+    gsap.ticker.add(syncDots);
+
     stages.forEach((stage) => {
         const covers = $$('.cover', stage);
         gsap.from(covers, {
@@ -167,6 +205,12 @@ function journey(desktop) {
             },
         });
     });
+
+    return () => {
+        prev?.removeEventListener('click', onPrev);
+        next?.removeEventListener('click', onNext);
+        gsap.ticker.remove(syncDots);
+    };
 }
 
 /* Look inside: a closed book sits centred, the cover turns on its spine and
@@ -229,6 +273,81 @@ function blogThumbs() {
             delay: i * 0.1,
             ease: 'expo.out',
             scrollTrigger: { trigger: thumb, start: 'top 90%', once: true },
+        });
+    });
+}
+
+/* Supporting copy under each heading (intro line, buttons, checklists)
+   rises in just after the heading lines. */
+function sectionCopy() {
+    const groups = [
+        ...$$('.section-head'),
+        ...$$('.inside-copy'),
+        ...$$('.journey-intro'),
+        ...$$('.page-head .wrap'),
+    ];
+    groups.forEach((group) => {
+        const items = $$(':scope > p:not(.eyebrow), :scope > div > p:not(.eyebrow), :scope > .btn, :scope > .carousel-nav, :scope > .tabs, :scope > ul > li, :scope > .journey-cta, :scope > .chalk', group);
+        if (!items.length) return;
+        gsap.from(items, {
+            y: 28,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.08,
+            ease: 'power3.out',
+            clearProps: 'transform,opacity',
+            scrollTrigger: { trigger: group, start: 'top 82%', once: true },
+        });
+    });
+
+    // Eyebrow rules draw in from the left.
+    $$('.eyebrow').forEach((eyebrow) => {
+        gsap.from(eyebrow, {
+            clipPath: 'inset(0 100% 0 0)',
+            duration: 0.9,
+            ease: 'power3.out',
+            clearProps: 'clipPath',
+            scrollTrigger: { trigger: eyebrow, start: 'top 90%', once: true },
+        });
+    });
+}
+
+/* Mobile journey: each stage's three covers start stacked, then fan out
+   as the card scrolls into view. */
+function mobileJourneyCovers() {
+    $$('.journey .stage').forEach((stage) => {
+        const covers = $$('.stage-books .cover', stage);
+        if (!covers.length) return;
+        gsap.from(covers, {
+            x: (i) => (1 - i) * 60,
+            y: 40,
+            rotation: (i) => [-14, 0, 14][i] ?? 0,
+            opacity: 0,
+            duration: 0.9,
+            stagger: 0.1,
+            ease: 'back.out(1.4)',
+            clearProps: 'transform,opacity',
+            scrollTrigger: { trigger: stage.querySelector('.stage-books'), start: 'top 88%', once: true },
+        });
+        gsap.from($$('.stage-tags li', stage), {
+            scale: 0.6,
+            opacity: 0,
+            duration: 0.5,
+            stagger: 0.04,
+            ease: 'back.out(2)',
+            clearProps: 'transform,opacity',
+            scrollTrigger: { trigger: stage, start: 'top 75%', once: true },
+        });
+    });
+}
+
+/* Mobile: book covers settle from a slight tilt as they scroll past. */
+function mobileCovers() {
+    $$('.book-grid .book-card .cover, .track .book-card .cover').forEach((cover, i) => {
+        gsap.fromTo(cover, { rotation: i % 2 ? 2.5 : -2.5 }, {
+            rotation: 0,
+            ease: 'none',
+            scrollTrigger: { trigger: cover, start: 'top bottom', end: 'center 55%', scrub: true },
         });
     });
 }

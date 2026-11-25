@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => $policy['title'].' | '.config('site.full_name')])
+@extends('layouts.app', ['title' => $policy['title'].' | '.config('site.full_name'), 'description' => $policy['title'].' for orders from Shubhanga Publications, Hyderabad: delivery, payment, returns and how we handle your data.'])
 
 @section('content')
     @include('partials.page-head', [

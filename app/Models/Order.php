@@ -10,10 +10,19 @@ class Order extends Model
     protected $fillable = [
         'number', 'name', 'email', 'phone',
         'address_line1', 'address_line2', 'city', 'state', 'pincode', 'notes',
-        'subtotal', 'shipping', 'total',
+        'subtotal', 'shipping', 'discount', 'coupon_code', 'total',
         'payment_method', 'payment_status', 'status',
+        'tracking_number', 'admin_notes', 'shipped_at', 'delivered_at',
         'razorpay_order_id', 'razorpay_payment_id', 'ip',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'shipped_at' => 'datetime',
+            'delivered_at' => 'datetime',
+        ];
+    }
 
     public const STATUS_LABELS = [
         'awaiting_payment' => 'Awaiting payment',

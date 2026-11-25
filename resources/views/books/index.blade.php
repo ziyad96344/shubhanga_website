@@ -1,7 +1,21 @@
+@php
+    $seoParts = array_filter([
+        $active['board'] ?? null,
+        isset($active['section']) ? \App\Support\Catalog::sectionLabel($active['section']) : null,
+        isset($active['class']) ? \App\Support\Catalog::classLabel($active['class']) : null,
+        $active['subject'] ?? null,
+    ]);
+    $seoTitle = $seoParts ? implode(' ', $seoParts).' books' : 'School books, Nursery to Grade 10';
+    $seoDescription = $seoParts
+        ? 'Shubhanga '.implode(', ', $seoParts).' books: NEP 2020 aligned, syllabus-mapped and error-free. See every title with price and order online or through your school.'
+        : 'Browse every Shubhanga book by board, section, grade and subject: pre-primary, primary, State Board and CBSE high school books for eleven states.';
+    $seoCanonical = route('books.index', array_intersect_key($active, array_flip(['board', 'section', 'class', 'subject'])));
+@endphp
 @extends('layouts.app', [
-    'title' => 'School books, Nursery to Grade 10 | '.config('site.full_name'),
-    'description' => 'Browse every Shubhanga book by state board, section, grade and subject: pre-primary, primary, State Board and CBSE high school.',
-    'noindex' => request()->hasAny(['q', 'sort', 'page']),
+    'title' => $seoTitle.' | '.config('site.full_name'),
+    'description' => $seoDescription,
+    'canonical' => $seoCanonical,
+    'noindex' => request()->hasAny(['q', 'sort', 'page']) || count($active) > 2,
 ])
 
 @php

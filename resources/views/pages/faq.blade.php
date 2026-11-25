@@ -1,5 +1,13 @@
 @extends('layouts.app', ['title' => 'FAQ | '.config('site.full_name'), 'description' => 'Answers about delivery, payment, returns, specimen copies and school orders.'])
 
+@push('head')
+    <script type="application/ld+json">{!! json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'FAQPage',
+        'mainEntity' => collect(config('content.faq'))->map(fn ($f) => ['@type' => 'Question', 'name' => $f['q'], 'acceptedAnswer' => ['@type' => 'Answer', 'text' => $f['a']]])->values()->all(),
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+@endpush
+
 @section('content')
     @include('partials.page-head', [
         'crumbs' => ['FAQ' => null],

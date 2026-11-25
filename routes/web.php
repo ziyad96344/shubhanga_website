@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
@@ -25,6 +26,8 @@ Route::delete('/cart/items/{slug}', [CartController::class, 'remove'])->name('ca
 // Checkout and orders
 Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout.show');
 Route::post('/checkout', [CheckoutController::class, 'store'])->middleware('throttle:10,1')->name('checkout.store');
+Route::post('/checkout/coupon', [CheckoutController::class, 'applyCoupon'])->middleware('throttle:20,1')->name('checkout.coupon');
+Route::post('/checkout/coupon/remove', [CheckoutController::class, 'removeCoupon'])->name('checkout.coupon.remove');
 Route::get('/checkout/pay/{number}', [CheckoutController::class, 'pay'])->name('checkout.pay');
 Route::post('/checkout/pay/{number}', [CheckoutController::class, 'verify'])->name('checkout.verify');
 Route::get('/orders/{number}', [OrderController::class, 'show'])->name('orders.show');
@@ -47,3 +50,41 @@ Route::get('/sitemap.xml', [PageController::class, 'sitemap'])->name('sitemap');
 $forms = 'specimen-copy|bulk-order|become-a-distributor|write-for-us|contact';
 Route::get('/{form}', [EnquiryController::class, 'show'])->where('form', $forms)->name('forms.show');
 Route::post('/{form}', [EnquiryController::class, 'store'])->where('form', $forms)->middleware('throttle:6,1')->name('forms.store');
+
+/*
+|--------------------------------------------------------------------------
+| Admin panel (/admin)
+|--------------------------------------------------------------------------
+*/
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('login', [Admin\AuthController::class, 'showLogin'])->name('login');
+    Route::post('login', [Admin\AuthController::class, 'login'])->middleware('throttle:5,1')->name('login.post');
+    Route::post('logout', [Admin\AuthController::class, 'logout'])->name('logout');
+
+    Route::middleware(['auth', 'admin'])->group(function () {
+        Route::get('/', [Admin\DashboardController::class, 'index'])->name('dashboard');
+
+        Route::resource('books', Admin\BookController::class)->except(['show']);
+        Route::patch('books/{book}/toggle', [Admin\BookController::class, 'toggle'])->name('books.toggle');
+
+        Route::get('orders', [Admin\OrderController::class, 'index'])->name('orders.index');
+        Route::get('orders/{order}', [Admin\OrderController::class, 'show'])->name('orders.show');
+        Route::patch('orders/{order}', [Admin\OrderController::class, 'updateStatus'])->name('orders.update');
+
+        Route::resource('coupons', Admin\CouponController::class)->except(['show']);
+
+        Route::get('enquiries', [Admin\EnquiryController::class, 'index'])->name('enquiries.index');
+        Route::get('enquiries/{enquiry}', [Admin\EnquiryController::class, 'show'])->name('enquiries.show');
+        Route::patch('enquiries/{enquiry}', [Admin\EnquiryController::class, 'update'])->name('enquiries.update');
+        Route::delete('enquiries/{enquiry}', [Admin\EnquiryController::class, 'destroy'])->name('enquiries.destroy');
+        Route::get('enquiries/{enquiry}/file/{field}', [Admin\EnquiryController::class, 'file'])->name('enquiries.file');
+
+        Route::get('customers', [Admin\CustomerController::class, 'index'])->name('customers.index');
+        Route::get('customers/{phone}', [Admin\CustomerController::class, 'show'])->name('customers.show');
+
+        Route::get('reports/sales', [Admin\ReportController::class, 'sales'])->name('reports.sales');
+
+        Route::get('settings', [Admin\SettingsController::class, 'index'])->name('settings');
+        Route::put('settings', [Admin\SettingsController::class, 'update'])->name('settings.update');
+    });
+});

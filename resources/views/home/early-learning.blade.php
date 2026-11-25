@@ -1,6 +1,6 @@
 @php($books = \App\Support\Catalog::books()->where('type', 'Pre-primary')->where('class', 'PP1')->take(4))
 
-<section class="section early" aria-labelledby="early-title">
+<section class="section early section--waves" aria-labelledby="early-title">
     <div class="wrap">
         <div class="section-head section-head--split">
             <div style="display: grid; gap: 22px; justify-items: start">
